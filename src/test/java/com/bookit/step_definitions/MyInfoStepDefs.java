@@ -8,28 +8,27 @@ import cucumber.runtime.Env;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class MyInfoStepDefs {
 
 	@Given("user logs in using {string} {string}")
 	public void user_logs_in_using(String email, String password) {
-	    Driver.get().get(Environment.URL);
+	    Driver.get().get(ConfigurationReader.get("url_qa2"));
 	    Driver.get().manage().window().maximize();
+		Driver.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	    SignInPage signInPage = new SignInPage();
 	    signInPage.email.sendKeys(email);
 	    signInPage.password.sendKeys(password);
 		BrowserUtils.waitFor(1);
 	    signInPage.signInButton.click();
-
-
-	    	    
 	}
 
 	@When("user is on the my self page")
 	public void user_is_on_the_my_self_page() {
 	    SelfPage selfPage = new SelfPage();
 	    selfPage.goToSelf();
-		
 	}
 
 

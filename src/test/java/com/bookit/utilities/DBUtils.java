@@ -1,10 +1,7 @@
 package com.bookit.utilities;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DBUtils {
 
@@ -27,6 +24,18 @@ public class DBUtils {
             e.printStackTrace();
         }
 
+    }
+
+    public static void createConnectionSukru() {
+        String dbUrl = ConfigurationReader.get("dbUrl_qa2");
+        String dbUsername = ConfigurationReader.get("dbUsername_qa2");
+        String dbPassword = ConfigurationReader.get("dbPassword_qa2");
+        try {
+            connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -148,7 +157,7 @@ public class DBUtils {
      */
     public static List<Map<String, Object>> getQueryResultMap(String query) {
         executeQuery(query);
-        List<Map<String, Object>> rowList = new ArrayList<>();
+        List<Map<String,Object>> rowList = new ArrayList<>();
         ResultSetMetaData rsmd;
 
         try {
@@ -156,7 +165,7 @@ public class DBUtils {
 
             while (resultSet.next()) {
 
-                Map<String, Object> colNameValueMap = new HashMap<>();
+                Map<String,Object> colNameValueMap = new LinkedHashMap<>();
 
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 
@@ -203,7 +212,7 @@ public class DBUtils {
     }
 
     private static void executeQuery(String query) {
-        createConnection();
+        //createConnection();
         try {
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         } catch (SQLException e) {

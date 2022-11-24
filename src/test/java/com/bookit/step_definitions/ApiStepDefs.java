@@ -25,6 +25,7 @@ public class ApiStepDefs {
     String studentEmail;
     String studentPassword;
 
+    //user.feature_1st scenario
     @Given("I logged Bookit api using {string} and {string}")
     public void i_logged_Bookit_api_using_and(String email, String password) {
 
@@ -53,15 +54,18 @@ public class ApiStepDefs {
 
     }
 
+
+
+    //user.feature_2nd scenario
     @Then("the information about current user from api and database should match")
     public void theInformationAboutCurrentUserFromApiAndDatabaseShouldMatch() {
         System.out.println("we will compare database and api in this step");
 
         //get information from database
-        //connection is from hooks and it will be ready
-        String query = "select firstname,lastname,role from pg_user\n" +
+        String query = "select firstname,lastname,role from users\n" +
                 "where email = '"+emailGlobal+"'";
 
+        DBUtils.createConnectionSukru();
         Map<String,Object> dbMap = DBUtils.getRowMap(query);
         System.out.println("dbMap = " + dbMap);
         //save db info into variables
@@ -81,15 +85,20 @@ public class ApiStepDefs {
         Assert.assertEquals(expectedLastName,actualLastName);
         Assert.assertEquals(expectedRole,actualRole);
 
+        DBUtils.destroyConnection();
+
     }
 
+
+
+    //user.feature_3rd/4th scenario
     @Then("UI,API and Database user information must be match")
     public void uiAPIAndDatabaseUserInformationMustBeMatch() {
         //get information from database
-        //connection is from hooks and it will be ready
         String query = "select firstname,lastname,role from users\n" +
                 "where email = '"+emailGlobal+"'";
 
+        DBUtils.createConnectionSukru();
         Map<String,Object> dbMap = DBUtils.getRowMap(query);
         System.out.println("dbMap = " + dbMap);
         //save db info into variables
@@ -112,22 +121,26 @@ public class ApiStepDefs {
         System.out.println("actualUIName = " + actualUIName);
         System.out.println("actualUIRole = " + actualUIRole);
 
-         //UI vs DB
-        String expectedFullName = expectedFirstName+" "+expectedLastName;
-        //verify ui fullname vs db fullname
-        Assert.assertEquals(expectedFullName,actualUIName);
+        //UI vs DB
+        String expectedDBFullName = expectedFirstName+" "+expectedLastName;
+        //verify ui fullName vs db fullName
+        Assert.assertEquals(expectedDBFullName,actualUIName);
         Assert.assertEquals(expectedRole,actualUIRole);
 
         //UI vs API
-        //Create a fullname for api
-
-        String actualFullName = actualFirstName+" "+actualLastName;
-
-        Assert.assertEquals(actualFullName,actualUIName);
+        //Create a fullName for api
+        String actualAPIFullName = actualFirstName+" "+actualLastName;
+        //asserting
+        Assert.assertEquals(actualAPIFullName,actualUIName);
         Assert.assertEquals(actualRole,actualUIRole);
+
+        DBUtils.destroyConnection();
 
     }
 
+
+
+    //user.feature_5th scenario
     @When("I send POST request to {string} endpoint with following information")
     public void i_send_POST_request_to_endpoint_with_following_information(String path, Map<String,String> studentInfo) {
         //why we prefer to get information as a map from feature file ?
@@ -143,10 +156,8 @@ public class ApiStepDefs {
                 .and().header("Authorization",token)
                 .log().all()
                 .when()
-                .post(Environment.BASE_URL + path)
-        .then().log().all().extract().response();        ;
-
-
+                .post(ConfigurationReader.get("url_qa2") + path)
+        .then().log().all().extract().response();
     }
 
     @Then("I delete previously added student")

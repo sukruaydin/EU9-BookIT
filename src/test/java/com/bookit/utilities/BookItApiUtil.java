@@ -14,8 +14,8 @@ public class BookItApiUtil {
                 .queryParam("email", email)
                 .queryParam("password", password)
                 .when()
-                .get(Environment.BASE_URL + "/sign")
-                .then().log().all().extract().response();
+                .get(ConfigurationReader.get("url_qa2") + "/sign")
+                .then().extract().response();
 
         String token = response.path("accessToken");
 
@@ -50,7 +50,7 @@ public class BookItApiUtil {
                 .when()
                 .delete(Environment.BASE_URL+"/api/students/{id}")
                 .then()
-                .statusCode(204);
+                .statusCode(204).log().all();
     }
 
     //teacher , student-member,student-leader
