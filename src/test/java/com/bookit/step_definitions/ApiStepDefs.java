@@ -102,16 +102,16 @@ public class ApiStepDefs {
         Map<String,Object> dbMap = DBUtils.getRowMap(query);
         System.out.println("dbMap = " + dbMap);
         //save db info into variables
-        String expectedFirstName = (String) dbMap.get("firstname");
-        String expectedLastName = (String) dbMap.get("lastname");
-        String expectedRole = (String) dbMap.get("role");
+        String expectedFirstNameDB = (String) dbMap.get("firstname");
+        String expectedLastNameDB = (String) dbMap.get("lastname");
+        String expectedRoleDB = (String) dbMap.get("role");
 
         //get information from api
         JsonPath jsonPath = response.jsonPath();
         //save api info into variables
-        String actualFirstName = jsonPath.getString("firstName");
-        String actualLastName = jsonPath.getString("lastName");
-        String actualRole = jsonPath.getString("role");
+        String actualFirstNameAPI = jsonPath.getString("firstName");
+        String actualLastNameAPI = jsonPath.getString("lastName");
+        String actualRoleAPI = jsonPath.getString("role");
 
         //get information from UI
         SelfPage selfPage = new SelfPage();
@@ -122,17 +122,18 @@ public class ApiStepDefs {
         System.out.println("actualUIRole = " + actualUIRole);
 
         //UI vs DB
-        String expectedDBFullName = expectedFirstName+" "+expectedLastName;
+        //Create a fullName for DB
+        String expectedDBFullName = expectedFirstNameDB+" "+expectedLastNameDB;
         //verify ui fullName vs db fullName
         Assert.assertEquals(expectedDBFullName,actualUIName);
-        Assert.assertEquals(expectedRole,actualUIRole);
+        Assert.assertEquals(expectedRoleDB,actualUIRole);
 
         //UI vs API
         //Create a fullName for api
-        String actualAPIFullName = actualFirstName+" "+actualLastName;
+        String actualAPIFullName = actualFirstNameAPI+" "+actualLastNameAPI;
         //asserting
         Assert.assertEquals(actualAPIFullName,actualUIName);
-        Assert.assertEquals(actualRole,actualUIRole);
+        Assert.assertEquals(actualRoleAPI,actualUIRole);
 
         DBUtils.destroyConnection();
 
