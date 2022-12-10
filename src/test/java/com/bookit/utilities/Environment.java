@@ -23,6 +23,7 @@ public class Environment {
 
     static {
 
+            //if we run this by jenkins, I want to give the priority to terminal
             String environment = System.getProperty("environment") != null ? environment = System.getProperty("environment") : ConfigurationReader.get("environment");
             //String environment = ConfigurationReader.get("environment");
 
