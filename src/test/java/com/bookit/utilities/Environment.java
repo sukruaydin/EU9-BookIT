@@ -28,6 +28,7 @@ public class Environment {
 
             try {
 
+                //user.dir--> static value, general --> we are providing full path
                 String path = System.getProperty("user.dir") + "/src/test/resources/Environments/" + environment + ".properties";
 
                 FileInputStream input = new FileInputStream(path);
